@@ -1,0 +1,14 @@
+@font-face {
+    font-family: "Open Sans";
+    src:   url("/fonts/OpenSans-Regular.ttf") format("truetype");
+           
+   }
+   @font-face {
+    font-family: "Open Sans Light";
+    src:  url("/fonts/OpenSans-Light.ttf") format("truetype");
+   }
+
+   .heading {
+       font-size:   1.56rem;
+       font-weight: 700;
+   }

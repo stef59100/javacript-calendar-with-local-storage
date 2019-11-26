@@ -1,0 +1,7 @@
+.nav {
+    display: flex;
+    flex-direction: row;
+    li:not(:first-child) {
+        margin:0 1em;
+    }
+}

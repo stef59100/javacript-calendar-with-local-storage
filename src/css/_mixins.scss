@@ -1,0 +1,19 @@
+@mixin right-align {
+    text-align:right;
+}
+@mixin left-align {
+    text-align:left;
+}
+@mixin flex-grow ($number) {
+    flex-grow: $number;
+}
+@mixin display-flex {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+@mixin margin($top, $right, $bottom, $left){
+    margin: $top $right $bottom $left;
+}
+

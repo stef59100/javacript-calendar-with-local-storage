@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
+<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
+<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Hello !</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="dist/main.css">
+    </head>
+    <body>
+        <div class="container">
+            <button class="toggle brand-primary base btn">toggle grid/list</button>
+            <button class="brand-primary btn base" id="cartButton">Panier <span></span></button>
+            <div id="cart" class="cart hidden">
+                <span class="close close-cart btn">close</span>
+                <h2>This is the cart</h2>
+                <div class="cartContent">
+                </div>
+                <div class="cart-item-total cartTotal"></div>
+                <buton class="clear-cart btn">Supprimer le panier</buton>
+            </div>
+            <div class="row"></div>
+        </div>
+        <div class="overlay hidden"></div> 
+
+       
+     
+        <!--[if lt IE 7]>
+            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
+        <![endif]-->
+        
+        <script src="dist/bundle.js" async defer></script>
+    </body>
+</html> 

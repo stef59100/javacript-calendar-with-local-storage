@@ -1,0 +1,3 @@
+@mixin shadow($x, $y, $spread, $radius, $color, $opacity) {
+    box-shadow: #{$x}px #{$y}px #{$spread}px #{$radius}px rgba($color, $opacity);
+}

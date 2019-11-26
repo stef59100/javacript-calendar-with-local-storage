@@ -1,0 +1,45 @@
+@import "../../node_modules/normalize.css/normalize.css";
+@import "../../node_modules/materialize-css/sass/materialize-minimal.scss";
+@import "mixins";
+@import "helpers";
+@import "colors";
+@import "toggle";
+@import "flex";
+@import "effects";
+@import "colorList";
+@import "fonts";
+@import "list";
+@import "grid";
+@import "nav";
+@import "./modules/cart";
+
+body {
+    font-family: "Open Sans", sans-serif;
+    background-color: $back;
+}
+
+h1 {
+    font-family: "Open Sans Light", sans-serif;
+    font-size: 1.4rem;
+}
+
+.right {
+    .list & {
+        @include right-align;
+    }
+}
+
+.slice {
+    order: 2;
+    flex-shrink: 1;
+    margin: auto;
+    width: 100%;
+
+}
+.divider {
+    margin: 2em 0;
+    width: 100%;
+}
+div {
+    position: relative;
+}

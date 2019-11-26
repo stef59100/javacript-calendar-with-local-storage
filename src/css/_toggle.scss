@@ -1,0 +1,11 @@
+.row {
+    &.list {
+        div.col {           
+            display: inline-flex;
+            flex-direction:  row;
+            flex-wrap: wrap;
+        }
+
+    }
+
+}
