@@ -12,20 +12,20 @@
         <link rel="stylesheet" href="dist/main.css">
     </head>
     <body>
-        <div class="container">
-            <button class="toggle brand-primary base btn">toggle grid/list</button>
-            <button class="brand-primary btn base" id="cartButton">Panier <span></span></button>
-            <div id="cart" class="cart hidden">
-                <span class="close close-cart btn">close</span>
-                <h2>This is the cart</h2>
-                <div class="cartContent">
+        <div class="container">          
+            <div id="agenda" class="calendar"></div>
+            <div class="js-eventForm hidden">
+               <label for="js-eventTitle">Intitulé de l'évènement</label>
+                <input type="text" name="js-eventTitle" id="eventTitle" class="js-eventTitle">
+                <label for="eventDesc">Intitulé de l'évènement</label>
+                <textarea class="js-eventDesc" name="eventDesc" id="eventDesc" cols="30" rows="10"></textarea>
+                <div class="center mt-2">
+                    <button class="js-store btn orange base">Enregistrer</button>
                 </div>
-                <div class="cart-item-total cartTotal"></div>
-                <buton class="clear-cart btn">Supprimer le panier</buton>
             </div>
-            <div class="row"></div>
         </div>
-        <div class="overlay hidden"></div> 
+        <div class="js-overlay"></div>
+        
 
        
      

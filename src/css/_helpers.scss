@@ -5,3 +5,7 @@ img {
     max-width: 100%;
     height: auto;
 }
+$unit: 1rem;
+.mt-2 {
+    margin-top: $unit*2;
+}
