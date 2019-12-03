@@ -110,6 +110,7 @@ class BuildUi {
                 //console.log(cell.dataset.identifier);
                 if (!cell.classList.contains('past')){
                 this.createForm(cell.dataset.identifier);}
+                
             })
 
             // Ajoute une classe spéciale pour aujourd'hui
@@ -125,11 +126,8 @@ class BuildUi {
     }
     createForm(timestamp) {   
         overlayDOM.style.zIndex ="9998";
-        overlayDOM.style.opacity="1";
-        let formTitle = document.createElement('h3');
-        formTitle.textContent =  `Ajouter un evenement`;
-
-        formDiv.insertBefore(formTitle, formDiv.firstChild);
+        overlayDOM.style.opacity="1";      
+       
         formDiv.classList.toggle('hidden');
         this.storeEvent(timestamp);       
     }
@@ -187,9 +185,27 @@ class BuildUi {
              if (eventsRecorded){
             console.log(eventsRecorded);
             cell.classList.add('event');
-            cell.innerHTML +=`<span>${eventsRecorded.title} ${eventsRecorded.description}</span>`;
+            cell.innerHTML +=`<span>${eventsRecorded.title} ${eventsRecorded.description}</span>
+            <button class="btn orange base js-remove" data-id="${cellStamp}" >Supprimer</button>`;
+            this.deleteEvent(cellStamp);
              }
         })          
+    }
+    removeItem(id) {
+        agendaWithEvents =agendaWithEvents.filter(item => item.timestamp !== id);     
+        Storage.saveAgenda(agendaWithEvents);
+      
+    }
+    deleteEvent(){
+        let removeButtons = document.querySelectorAll('.js-remove');
+        removeButtons.forEach(button => {
+            button.addEventListener('click', e=> {
+                let deleteStamp = button.dataset.id;
+                this.removeItem(deleteStamp);
+                this.displayCalendarEvents();
+            })
+        })
+        
     }
     
 }

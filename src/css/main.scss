@@ -36,34 +36,39 @@ body {
     height: 40px;
     line-height: 40px;
     text-align: center;
+    display: flex;
+    justify-content: stretch;
+
+    button {
+        background: none;
+        color: inherit;
+        cursor: pointer;
+        font-family: Consolas;
+        font-size: 1.75rem;
+        height: 100%;
+        padding: 0 15px;
+    }
 }
 
 .calendar .month {
     display: inline-block;
     font-weight: bold;
+    flex-grow: 1;
 }
 
-.calendar button {
-    background: none;
-    color: inherit;
-    cursor: pointer;
-    font-family: Consolas;
-    font-size: 1.75rem;
-    height: 100%;
-    padding: 0 15px;
-}
+
 
 .calendar button:hover {
     color: #009FB7;
 }
 
-.calendar button:first-child {
-    float: left;
-}
+// .calendar button:first-child {
+//     float: left;
+// }
 
-.calendar button:last-child {
-    float: right;
-}
+// .calendar button:last-child {
+//     float: right;
+// }
 
 .calendar .cell {
     background: #fff;
@@ -85,6 +90,11 @@ body {
 
     span {
         display: block;
+    }
+    button {
+        font-size: 0.7em;
+        padding: 7px;
+        height: auto;
     }
 }
 
