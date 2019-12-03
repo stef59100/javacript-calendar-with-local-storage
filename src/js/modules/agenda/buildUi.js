@@ -1,5 +1,3 @@
-
-const agendaDOM = document.querySelector("#agenda");
 let evenements = [];
 let agendaWithEvents;
 let formDiv = document.querySelector('.js-eventForm');
@@ -12,7 +10,7 @@ class BuildUi {
         this.year = this.time.getFullYear();
         this.month = this.time.getMonth();
         this.content = document.createElement('div');
-        this.monthDiv = document.createElement('div');        
+        this.monthDiv = document.createElement('div');
 
         // Liste des mois
         this.monthList = ['janvier', 'février', 'mars', 'avril', 'mai', 'juin', 'juillet', 'aôut', 'septembre', 'octobre', 'novembre', 'décembre'];
@@ -25,15 +23,13 @@ class BuildUi {
         this.currentMonth = new Date(this.year, this.month, 1);
     }
 
-    
-
     displayAgenda() {
         //construction du header
         let header = document.createElement('div');
         header.classList.add('header', 'deep-orange', 'base');
         this.domElement.appendChild(header);
         //Affichage des jours
-        this.content.classList.add('content','row');
+        this.content.classList.add('content', 'row');
 
         this.domElement.appendChild(this.content);
         // Bouton "précédent"
@@ -98,47 +94,47 @@ class BuildUi {
         for (let i = 1; i <= monthLength; i++) {
             let cell = document.createElement('span');
             cell.classList.add('cell');
-            if(i%2 == 0){cell.classList.add('odd')} else {cell.classList.add('even')};
+            if (i % 2 == 0) { cell.classList.add('odd') } else { cell.classList.add('even') };
             cell.innerHTML = `<span>${i}</span>`;
             this.content.appendChild(cell);
 
             // Timestamp de la cellule
             let timestamp = new Date(date.getFullYear(), date.getMonth(), i).getTime();
-            cell.dataset.identifier = timestamp;          
+            cell.dataset.identifier = timestamp;
 
             cell.addEventListener('click', (e) => {
                 //console.log(cell.dataset.identifier);
-                if (!cell.classList.contains('past')){
-                this.createForm(cell.dataset.identifier);}
-                
+                if (!cell.classList.contains('past')) {
+                    this.createForm(cell.dataset.identifier);                   
+                }
             })
 
             // Ajoute une classe spéciale pour aujourd'hui
             if (timestamp === this.time.getTime()) {
                 cell.classList.add('today');
-            } else if (timestamp < this.time.getTime()){
+            } else if (timestamp < this.time.getTime()) {
                 cell.classList.add('past');
             }
         }
-    }   
+    }
     setupApp() {
-        evenements = Storage.getAgenda();             
+        evenements = Storage.getAgenda();
     }
-    createForm(timestamp) {   
-        overlayDOM.style.zIndex ="9998";
-        overlayDOM.style.opacity="1";      
-       
+    createForm(timestamp) {
+        overlayDOM.style.zIndex = "9998";
+        overlayDOM.style.opacity = "1";
+
         formDiv.classList.toggle('hidden');
-        this.storeEvent(timestamp);       
+        this.storeEvent(timestamp);
     }
-    hideForm(){
-        overlayDOM.addEventListener('click', ()=>{
+    hideForm() {
+        overlayDOM.addEventListener('click', () => {
             console.log('overlay clicked !');
-            if (!formDiv.classList.contains('hidden')){
-                formDiv.classList.add('hidden');            
+            if (!formDiv.classList.contains('hidden')) {
+                formDiv.classList.add('hidden');
             }
-            overlayDOM.style.zIndex ="-1";
-            overlayDOM.style.opacity="0";
+            overlayDOM.style.zIndex = "-1";
+            overlayDOM.style.opacity = "0";
         })
     }
     storeEvent(timestamp) {
@@ -154,60 +150,65 @@ class BuildUi {
                 eventItem.title = titleField.value;
                 eventItem.description = eventDesc.value;
                 console.log(eventItem);
-                evenements = [...evenements,eventItem];
+                evenements = [...evenements, eventItem];
                 console.log(evenements);
                 //on stocke dans le local storage;
                 Storage.saveAgenda(evenements);
                 //on referme et on réinitialise les champs
-                e.target.parentElement.classList.toggle('hidden');
+                e.target.parentElement.parentElement.classList.toggle('hidden');
+                overlayDOM.style.zIndex = "-1";
+                overlayDOM.style.opacity = "0";
+                
                 titleField.value = ``;
-                eventDesc.value ='';
+                eventDesc.value = '';
                 this.displayCalendarEvents();
 
-            }
-            else {
+            } else {
                 //console.log('invalide');
             }
         })
     }
-    displayCalendarEvents(){
-        console.log("I'm displayCalendar Method");
-
-        agendaWithEvents=Storage.getAgenda();
-        console.log(agendaWithEvents);   
+    displayCalendarEvents() {        
+        agendaWithEvents = Storage.getAgenda(); 
+        console.log('pepe') ;
         //Parcourir tous les ".cell", lire leur "data-dentifier"
         // si le data-identifier existe dans l'un des evenements de l'agenda, on affiche l'evenement dans la cellule
         let timestampedCells = document.querySelectorAll('.cell');
         timestampedCells.forEach(cell => {
             let cellStamp = cell.dataset.identifier;
             //console.log(cellStamp);
-             let eventsRecorded= agendaWithEvents.find(item => item.timestamp == cellStamp);
-             if (eventsRecorded){
-            console.log(eventsRecorded);
-            cell.classList.add('event');
-            cell.innerHTML +=`<span>${eventsRecorded.title} ${eventsRecorded.description}</span>
-            <button class="btn orange base js-remove" data-id="${cellStamp}" >Supprimer</button>`;
-            this.deleteEvent(cellStamp);
-             }
-        })          
+            let eventsRecorded = agendaWithEvents.find(item => item.timestamp == cellStamp);
+            if (eventsRecorded) {
+                //console.log(eventsRecorded);
+                cell.classList.add('event');
+                cell.innerHTML += `<span>${eventsRecorded.title} ${eventsRecorded.description}</span>
+                <button class="btn orange base js-remove" data-id="${cellStamp}" >Supprimer</button>`;
+                this.deleteEvent(cellStamp);
+            }
+        })
     }
     removeItem(id) {
-        agendaWithEvents =agendaWithEvents.filter(item => item.timestamp !== id);     
+        agendaWithEvents = agendaWithEvents.filter(item => item.timestamp !== id);
         Storage.saveAgenda(agendaWithEvents);
-      
+       // this.displayCalendarEvents();
+       // On rafraichit la vue
+        document.location.reload();
     }
-    deleteEvent(){
+    stopEvent(e) {
+        e.stopPropagation();
+    }
+    deleteEvent() {
         let removeButtons = document.querySelectorAll('.js-remove');
         removeButtons.forEach(button => {
-            button.addEventListener('click', e=> {
+            button.addEventListener('click', e => {
                 let deleteStamp = button.dataset.id;
+                this.stopEvent(e); 
+               // console.log('bp');      
                 this.removeItem(deleteStamp);
-                this.displayCalendarEvents();
-            })
+                
+            }, false)
         })
-        
     }
-    
 }
 class Storage {
     static saveEvenement(evenements) {
@@ -217,7 +218,7 @@ class Storage {
         let evenements = JSON.parse(localStorage.getItem('evenements'));
         return evenements.find(evenement => evenement.timestamp === id);
     }
-    static saveAgenda(agenda){
+    static saveAgenda(agenda) {
         localStorage.setItem('Agenda', JSON.stringify(agenda))
     }
     static getAgenda() {

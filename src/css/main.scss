@@ -30,90 +30,76 @@ body {
     flex-direction: column;
     width: 50%;
     margin: auto;
-}
-
-.calendar .header {
-    height: 40px;
-    line-height: 40px;
-    text-align: center;
-    display: flex;
-    justify-content: stretch;
-
-    button {
-        background: none;
-        color: inherit;
-        cursor: pointer;
-        font-family: Consolas;
-        font-size: 1.75rem;
-        height: 100%;
-        padding: 0 15px;
-    }
-}
-
-.calendar .month {
-    display: inline-block;
-    font-weight: bold;
-    flex-grow: 1;
-}
-
-
-
-.calendar button:hover {
-    color: #009FB7;
-}
-
-// .calendar button:first-child {
-//     float: left;
-// }
-
-// .calendar button:last-child {
-//     float: right;
-// }
-
-.calendar .cell {
-    background: #fff;
-    color: #5d5d5d;
-    box-sizing: border-box;
-    display: inline-block;
-    padding: 10px 0;
-    text-align: center;
-    width: calc(100% / 7);
-    border: 1px solid lighten($dark-grey, 30%);
-
-    &.event {
-       background-color: $green-base;
+    .row {
+       margin: 0;
     }
 
-    &.odd {
-        background-color: $grey;
+    .header {
+        height: 40px;
+        line-height: 40px;
+        text-align: center;
+        display: flex;
+        justify-content: stretch;
+    
+        button {
+            background: none;
+            color: inherit;
+            cursor: pointer;
+            font-family: Consolas;
+            font-size: 1.75rem;
+            height: 100%;
+            padding: 0 15px;
+          &:hover {
+                color:$white;
+            }
+        }
     }
-
-    span {
-        display: block;
+    .month {
+        display: inline-block;
+        font-weight: bold;
+        flex-grow: 1;
     }
-    button {
-        font-size: 0.7em;
-        padding: 7px;
-        height: auto;
-    }
-}
-
-.calendar .day {
-    font-size: .8rem;
-    padding: 8px 0;
-}
-
-.calendar {
-
-    .day,
+    .cell {
+        background: #fff;
+        color: #5d5d5d;
+        box-sizing: border-box;
+        display: inline-block;
+        padding: 10px 0;
+        text-align: center;
+        width: calc(100% / 7);
+        //border: 1px solid lighten($dark-grey, 30%);
+    
+        &.event {
+           background-color: $green-base !important;
+        }
+    
+        &.odd {
+            background-color: lighten($dark-grey, 70%);
+        }
+    
+        span {
+            display: block;
+        }
+        button {
+            font-size: 0.7em;
+            padding: 7px;
+            height: auto;
+        }}
+        .day {
+            font-size: .8rem;
+            padding: 8px 0;
+        }
+        .day,
     .today {
         background: #009FB7 !important;
         color: #fff;
     }
     .past {
         background: $grey !important;
+        color:darken($grey, 30%);
     }
 }
+
 
 .js-eventForm {
     position: absolute;
@@ -124,14 +110,18 @@ body {
     transform: translateX(-50%);
     background-color: $grey;
     z-index: 9999;
+    font-size: 1em;
     label {
-        font-size: 1.5em;
+        font-size: 1em;
         color: $dark-grey;
     }
 
     input[type="text"],
     textarea {
         background-color: white;
+    }
+    textarea {
+        min-height: 5em;;
     }
 }
 .js-overlay {
