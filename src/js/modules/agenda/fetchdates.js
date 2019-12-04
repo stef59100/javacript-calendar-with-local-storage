@@ -1,4 +1,4 @@
-class Agenda{
+class Agenda {
     constructor() {
         this.evenements = require('./data/agenda.json');
     }

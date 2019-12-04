@@ -1,7 +1,8 @@
-let evenements = [];
+let events = [];
 let agendaWithEvents;
 let formDiv = document.querySelector('.js-eventForm');
 const overlayDOM = document.querySelector(".js-overlay");
+const DateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
 
 class BuildUi {
     constructor() {
@@ -40,7 +41,6 @@ class BuildUi {
         header.appendChild(previousButton);
 
         // Div qui contiendra le mois/année affiché
-
         this.monthDiv.classList.add('month');
         header.appendChild(this.monthDiv);
 
@@ -68,11 +68,11 @@ class BuildUi {
         this.content.textContent = '';
 
         // On ajoute le mois/année affiché
-        this.monthDiv.textContent = this.monthList[date.getMonth()].toUpperCase() + ' ' + date.getFullYear();
+        this.monthDiv.textContent = `${this.monthList[date.getMonth()].toUpperCase()}  ${date.getFullYear()}`;
 
         // Création des cellules contenant le jour de la semaine
         for (let i = 0; i < this.dayList.length; i++) {
-            let cell = document.createElement('span');
+            let cell = document.createElement('div');
             cell.classList.add('cell');
             cell.classList.add('day');
             cell.textContent = this.dayList[i].substring(0, 3).toUpperCase();
@@ -81,7 +81,7 @@ class BuildUi {
 
         // Création des cellules vides si nécessaire
         for (let i = 0; i < date.getDay(); i++) {
-            let cell = document.createElement('span');
+            let cell = document.createElement('div');
             cell.classList.add('cell');
             cell.classList.add('empty');
             this.content.appendChild(cell);
@@ -92,10 +92,15 @@ class BuildUi {
 
         // Création des cellules contenant les jours du mois affiché
         for (let i = 1; i <= monthLength; i++) {
-            let cell = document.createElement('span');
+            let cell = document.createElement('div');
+            let dayDigit = document.createElement('div');
+            let eventContent = document.createElement('div');
+            eventContent.classList.add('event-content');
             cell.classList.add('cell');
             if (i % 2 == 0) { cell.classList.add('odd') } else { cell.classList.add('even') };
-            cell.innerHTML = `<span>${i}</span>`;
+            dayDigit.textContent = `${i}`;
+            cell.appendChild(dayDigit);
+            cell.appendChild(eventContent);
             this.content.appendChild(cell);
 
             // Timestamp de la cellule
@@ -103,9 +108,9 @@ class BuildUi {
             cell.dataset.identifier = timestamp;
 
             cell.addEventListener('click', (e) => {
-                //console.log(cell.dataset.identifier);
+
                 if (!cell.classList.contains('past')) {
-                    this.createForm(cell.dataset.identifier);                   
+                    this.showForm(cell.dataset.identifier);
                 }
             })
 
@@ -118,18 +123,28 @@ class BuildUi {
         }
     }
     setupApp() {
-        evenements = Storage.getAgenda();
+        events = Storage.getAgenda();
     }
-    createForm(timestamp) {
+    showForm(timestamp) {
+        //on fait apparaitre l'overlay
         overlayDOM.style.zIndex = "9998";
         overlayDOM.style.opacity = "1";
+        let selectedDay = new Date(parseInt(timestamp));
+        let dayDOM = document.createElement('h4');
+        selectedDay = selectedDay.toLocaleString('fr-FR', DateOptions);
+        console.log(selectedDay);
+        dayDOM.textContent = selectedDay;
+        formDiv.querySelector('.form-header').appendChild(dayDOM);
 
+        formDiv.dataset.timestamp = timestamp;
         formDiv.classList.toggle('hidden');
+
+        //On appelle storeEvent en passant en paramètre le timestamp de la cellule 
         this.storeEvent(timestamp);
     }
     hideForm() {
         overlayDOM.addEventListener('click', () => {
-            console.log('overlay clicked !');
+
             if (!formDiv.classList.contains('hidden')) {
                 formDiv.classList.add('hidden');
             }
@@ -137,61 +152,69 @@ class BuildUi {
             overlayDOM.style.opacity = "0";
         })
     }
+    // stockage  de l'evenement en local storage
     storeEvent(timestamp) {
         let recordButton = document.querySelector('.js-store');
         let titleField = document.querySelector('.js-eventTitle');
         let eventDesc = document.querySelector('.js-eventDesc');
 
         recordButton.addEventListener('click', (e) => {
+            //On vérifie dans un premier temps que les champs sont remplis
             if (titleField.value != '' && eventDesc != '') {
-                //console.log("c'est bon ", timestamp);
+
+                //on construit un objet avec "timestamp", "title" et "description"
                 let eventItem = {};
                 eventItem.timestamp = timestamp;
                 eventItem.title = titleField.value;
                 eventItem.description = eventDesc.value;
-                console.log(eventItem);
-                evenements = [...evenements, eventItem];
-                console.log(evenements);
-                //on stocke dans le local storage;
-                Storage.saveAgenda(evenements);
+
+
+                //Si tout est OK on pousse eventItem dans le tableau events
+                events = [...events, eventItem];
+
+                this.displayCalendarEvents();
+
+                //on stocke dans le local storage;                
+                Storage.saveAgenda(events);
                 //on referme et on réinitialise les champs
                 e.target.parentElement.parentElement.classList.toggle('hidden');
                 overlayDOM.style.zIndex = "-1";
                 overlayDOM.style.opacity = "0";
-                
+
                 titleField.value = ``;
                 eventDesc.value = '';
-                this.displayCalendarEvents();
 
-            } else {
-                //console.log('invalide');
             }
         })
     }
-    displayCalendarEvents() {        
-        agendaWithEvents = Storage.getAgenda(); 
-        console.log('pepe') ;
+    //Affichage des evenements enregistrés;
+    displayCalendarEvents() {
+        agendaWithEvents = Storage.getAgenda();
+
         //Parcourir tous les ".cell", lire leur "data-dentifier"
-        // si le data-identifier existe dans l'un des evenements de l'agenda, on affiche l'evenement dans la cellule
+        // si le data-identifier existe dans l'un des events de l'agenda, on affiche l'evenement dans la cellule
         let timestampedCells = document.querySelectorAll('.cell');
         timestampedCells.forEach(cell => {
-            let cellStamp = cell.dataset.identifier;
-            //console.log(cellStamp);
-            let eventsRecorded = agendaWithEvents.find(item => item.timestamp == cellStamp);
+            let cellTimestamp = cell.dataset.identifier;
+            let eventContent = cell.querySelector('.event-content');
+
+            let eventsRecorded = events.find(item => item.timestamp == cellTimestamp);
             if (eventsRecorded) {
-                //console.log(eventsRecorded);
+
                 cell.classList.add('event');
-                cell.innerHTML += `<span>${eventsRecorded.title} ${eventsRecorded.description}</span>
-                <button class="btn orange base js-remove" data-id="${cellStamp}" >Supprimer</button>`;
-                this.deleteEvent(cellStamp);
+                eventContent.innerHTML = `<span>${eventsRecorded.title} ${eventsRecorded.description}</span>
+                <button class="btn orange base js-remove" data-id="${cellTimestamp}">Supprimer</button>`;
+                this.deleteEvent(cellTimestamp);
             }
         })
+
     }
+    //Suppression d'un évènement
     removeItem(id) {
         agendaWithEvents = agendaWithEvents.filter(item => item.timestamp !== id);
         Storage.saveAgenda(agendaWithEvents);
-       // this.displayCalendarEvents();
-       // On rafraichit la vue
+        // this.displayCalendarEvents();
+        // On rafraichit la vue
         document.location.reload();
     }
     stopEvent(e) {
@@ -202,23 +225,23 @@ class BuildUi {
         removeButtons.forEach(button => {
             button.addEventListener('click', e => {
                 let deleteStamp = button.dataset.id;
-                this.stopEvent(e); 
-               // console.log('bp');      
+                this.stopEvent(e);
+
                 this.removeItem(deleteStamp);
-                
             }, false)
         })
     }
 }
 class Storage {
-    static saveEvenement(evenements) {
-        localStorage.setItem("evenements", JSON.stringify(evenements));
+    static saveEvenement(events) {
+        localStorage.setItem("events", JSON.stringify(events));
     }
     static getEvenement(id) {
-        let evenements = JSON.parse(localStorage.getItem('evenements'));
-        return evenements.find(evenement => evenement.timestamp === id);
+        let events = JSON.parse(localStorage.getItem('events'));
+        return events.find(evenement => evenement.timestamp === id);
     }
     static saveAgenda(agenda) {
+        //localStorage.clear();
         localStorage.setItem('Agenda', JSON.stringify(agenda))
     }
     static getAgenda() {

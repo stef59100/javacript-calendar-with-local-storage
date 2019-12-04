@@ -5,16 +5,17 @@ import { BuildUi, Storage } from './modules/agenda/buildUi';
 
 const dateList = new Agenda();
 const displayUi = new BuildUi();
+
+
 displayUi.setupApp();
+
 
 dateList.getDates()
     .then(data => {
+        
        displayUi.displayAgenda(data);        
-        Storage.saveEvenement(data);
+        //Storage.saveEvenement(data);
+        Storage.saveAgenda(data);
         displayUi.displayCalendarEvents(); 
         displayUi.hideForm();
-    }).then(() => {
-         
-        
-    })
-    .catch(err => console.log(err));
+    }).catch(err => console.log(err));
